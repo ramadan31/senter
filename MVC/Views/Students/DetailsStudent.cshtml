@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "DetailsStudent";
+}
+<input type="hidden" id="idd" value="@ViewBag.id" />
+<div class="container-fluid">
+    <div class="row">
+        <div id="show" class="h-100 col-lg-3 col-md-4 text-center p-0 overflow-hidden d-md-block text-white border-right col-sm-12">
+            <nav class="nav navbar-expand-md navbar-light bg-light">
+                <button class="navbar-toggler w-100" type="button" data-toggle="collapse" data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span> Panel
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown2">
+                    
+
+                    <div class="list-group text-center flex-column w-100 shadow-lg border-right border-mag">
+                        <h3 class="py-3 alert-mag m-0">Student panel</h3>
+                        <img src="smartphone-png-17251.png" class="my-3 shadow col-6 offset-3 border-mag border" alt="">
+                        <h5 class="text-center lead text-mag font-weight-bold text-capitalize">mohammed asaad</h5>
+                        <a href="http://localhost:20478/Students/DetailsStudent?id=@ViewBag.id" class="list-group-item list-group-item-action" id="list-home-list">Home </a>
+                        <a href="http://localhost:20478/Students/DetailsStudent?id=@ViewBag.id" class="list-group-item list-group-item-action" id="list-home-list">My profile</a>
+                        <a href="http://localhost:20478/Students/changepassword?id=@ViewBag.id" class="list-group-item list-group-item-action" id="list-home-list">Password</a>
+                        <a href="http://localhost:20478" class="list-group-item list-group-item-action" id="list-home-list">Log out</a>
+                    </div>
+
+                </div>
+            </nav>
+
+        </div>
+        <div class="col-lg-9 col-md-8 col-sm-12 justify-content-center">
+            <div id="content" class="container text-center col-12 overflow-auto">
+                <!-- content .... import content here(homepage.html,feedback.html,adminlogin.html and any component)-->
+                <!-- end content -->
+                <div class="row my-5 border border-mag p-4 shadow col-lg-8 offset-lg-2">
+                    <h2 class=" col-12 my-4 text-mag">My profile</h2>
+                    <div class="col-md-6 my-2"><input class="form-control" type="email" id="Email1" value="" name="" placeholder="Email"></div>
+                    <div class="col-md-6 my-2"><input class="form-control" type="number" id="Mobile1" value="" name="" placeholder="Mobile"></div>
+                    <div class="col-md-6 my-2"><input class="form-control" type="text" id="Address1" value="" name="" placeholder="Address"></div>
+                    <div class="col-md-6 my-2"><input class="form-control" type="text" id="City1" value="" name="" placeholder="City"></div>
+                    <div class="col-md-6 my-2 text-left">Photo:<input class="form-control-file" id="Photo1" title="Pic" type="file" value="" name="" placeholder="Photo"></div>
+                    <div class="col-12 my-2"><button type="submit" id="Updatestudent" class="btn btn-mag w-25">Update</button></div>
+                </div>
+           
+        </div>
+
+    </div>
+</div>
+</div>
+    <script> 
+        $(document).ready(function(){
+            editProduct();
+            $('#Updatestudent').click(function () {
+                UpdateProduct();
+            })
+        })
+        function editProduct() {
+            var id = $('#idd').val();
+            $.ajax({
+                url: "/Students/Edit_student?id=" + id,
+                type: "post",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+
+                success: function (result) {
+                    $('#Email1').val(result.Email);
+                    $('#Mobile1').val(result.mobile);
+                    $('#Address1').val(result.address);
+                    $('#City1').val(result.city);
+                    $('#Photo1').val(result.photo);
+
+                }
+            })
+        }
+        function UpdateProduct(){
+            var id = $('#idd').val();
+            var Email = $('#Email1').val();
+            var Mobile = $('#Mobile1').val();
+            var Address = $('#Address1').val();
+            var City = $('#City1').val();
+            var Photo = $('#Photo1').val();
+            $.ajax({
+
+                url: "/Students/updata_student?Email=" + Email + "&mobile=" + Mobile + "&address=" + Address + "&studentid=" + id + "&city=" + City + "&photo=" + Photo,
+                type: "post",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    alert(' Update save ');
+                    editProduct();
+                },
+
+            });
+        }
+    </script>
+

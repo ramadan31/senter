@@ -1,0 +1,213 @@
+﻿
+@{
+    ViewBag.Title = "level";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="show" class="h-100 col-lg-3 col-md-4 text-center p-0 overflow-hidden d-md-block text-white border-right col-sm-12">
+            <nav class="nav navbar-expand-md navbar-light bg-light">
+                <button class="navbar-toggler w-100" type="button" data-toggle="collapse" data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span> Panel
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown2">
+
+                    <div class="list-group text-center flex-column w-100 shadow border border-primary">
+                        <h3 class="py-3 alert-primary m-0">Admin panel</h3>
+                        <a href="http://localhost:20478/Admin/level" class="list-group-item list-group-item-action" id="list-home-list">Add Level </a>
+                        <a href="http://localhost:20478/class/index" class="list-group-item list-group-item-action" id="list-home-list" >Add Class</a>
+                        <a href="http://localhost:20478/Addteacher/teachers?" class="list-group-item list-group-item-action" id="list-home-list" >Add teacher</a>
+                     
+                      
+                        <a href="http://localhost:20478" class="list-group-item list-group-item-action" id="list-home-list" >Log out</a>
+                    </div>
+                    <!-- import your sidebar here (sidebar.forms.html,admin.sidebar.html,stuff.sidebar.html) -->
+                    <!-- end of side bar importing -->
+                </div>
+            </nav>
+
+        </div>
+        <div class="col-lg-9 col-md-8 col-sm-12 justify-content-center">
+            <div id="content" class="container text-center col-12 overflow-auto">
+
+
+                <form action="" class="shadow-lg border p-3 col-md-10 col-lg-6 offset-md-1 offset-lg-3 col-sm-12  mt-5">
+                    <h2 class="my-3 text-center"><span class="text-danger" style="font-size: 40px;">A</span>dd <span class="text-danger">L</span>evel</h2>
+                    <input class="form-control my-2 text-center justify-content-center" type="text"  id="level" placeholder="Level name">
+                    <input type="hidden" id="hdnID" value="">
+                    <div  id="alert"class="alert alert-primary text-center" role="alert">
+                        Level successfully added!
+                    </div>
+                    <div id="alert1" class="alert alert-danger text-center" role="alert">
+                         the level name is Required!
+                    </div>
+                    <button class="btn btn-primary mx-auto w-100"id="add" type="button">Add</button>
+                    <button class="btn btn-primary mx-auto w-100" id="btnUpdate" type="button">UpData</button>
+                    <br /><br />
+                    <table class="table my-4 border overflow-hidden">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Level name</th>
+                                <th scope="col">process</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody">
+                            <!-- row for loop -->
+                            <tr>
+                                <td class="py-3 lead" style="vertical-align: middle;" scope="row">1</td>
+                                <td class="py-3 lead" style="vertical-align: middle;">
+                                    magdy elsayyad
+                                    <!-- inut show after click edit btn -->
+                                    <!-- <input type="text" class="form-control"> -->
+                                </td>
+                                <td style="vertical-align: middle;">
+                                  
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </form>
+                <!-- content .... import content here(homepage.html,feedback.html,adminlogin.html and any component)-->
+                <!-- end content -->
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script> 
+    $(document).ready(function () {
+        loadData();
+        $('#btnUpdate').hide();
+        $('#alert').hide();
+        $('#alert1').hide();
+        $('#add').click(function () {
+            save();
+            loadData();
+            canal();
+        })
+        $('#next').click(function () {
+            window.location = "/class/index";
+        })
+       
+        $('#btnUpdate').click(function () {
+            $('#add').hide();
+            var name = $('#level').val();
+            var id = $('#hdnID').val();
+            $.ajax({
+
+                url: "/Admin/updata?leval_name=" + name + "&level_id=" + id,
+                type: "post",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    alert('Updated Successfully!');
+                    loadData();
+                    canal();
+                }
+            });
+        })
+       
+    })
+    function save() {
+
+        var name = $('#level').val();
+        if (name == "" || name == undefined) {
+            $('#alert1').show().hide(5000);
+        } else {
+            $.ajax({
+
+                url: "/Admin/addlevel?leval_name=" + name,
+                type: "post",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result == "success") {
+                        loadData();
+                        $('#alert').show(1000).hide(2000);
+                    }
+                    else {
+                        alert("please Add the level??")
+                    }
+                },
+
+            });
+        }
+           
+        }
+    function loadData() {
+        $.ajax({
+            url: "/Admin/getlevel",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '';
+                var i=1
+                $.each(result, function (key, item) {
+                    html += '<tr>';
+                    html += '<td>' + i++ +'</td>';
+                    html += '<td>' + item.leval_name + '</td>';
+                    html += '<td> <a href="javascript:void(0);" onclick=UpdateProduct(' + item.level_id + '); return false;style="background-color:#56c0c3">' +
+                        '<i class="fa fa-edit" style="font-size: x-large;color: blue;"></i></a>' +
+                        '&nbsp;&nbsp;<a href="javascript:void(0);" onclick=DeleteProduct(' +item.level_id + '); return false;><i class="fa fa-trash" style="font-size: x-large;color: red;"></i></a>' +
+                    '</td> ';
+                    html +='</tr>'
+                   
+                });
+                $('.tbody').html(html);
+            },
+
+        });
+    }
+    function UpdateProduct(level_id) {
+        $('#add').hide();
+         $('#hdnID').val(level_id);
+         $.ajax({
+             url:"/Admin/Edit?id=" + level_id,
+             type: "post",
+             contentType: "application/json;charset=utf-8",
+             dataType: "json",
+
+             success: function (result) {
+                 $('#level').val(result.leval_name);
+                 $('#btnUpdate').show();
+                 alert("Editlevel is successfully")
+                 loadData();
+
+             }
+         })
+    }
+    function DeleteProduct(level_id) {
+        $('#hdnID').val(level_id);
+        $('#add').show();
+        $('#btnUpdate').hide();
+        var s = confirm("ok or NO Delete");
+        if (s) {
+            $.ajax({
+                url: "/Admin/deletlevel?id="+level_id,
+                type: "post",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+
+                success: function (result) {
+                    alert("Delet is successfully")
+                    loadData();
+
+                }
+            })
+        }
+        else { loadData(); }
+
+
+    };
+    function canal() {
+        $('#level').val('');
+    }
+    
+</script>
+

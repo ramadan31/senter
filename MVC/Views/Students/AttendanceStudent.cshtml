@@ -1,0 +1,196 @@
+﻿@{
+    ViewBag.Title = "AttendanceStudent";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="show" class="h-100 col-lg-3 col-md-4 text-center p-0 overflow-hidden d-md-block text-white border-right col-sm-12">
+            <nav class="nav navbar-expand-md navbar-light bg-light">
+                <button class="navbar-toggler w-100" type="button" data-toggle="collapse" data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span> Panel
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown2">
+                    <!-- import your sidebar here (sidebar.forms.html,admin.sidebar.html,stuff.sidebar.html) -->
+                    <!-- end of side bar importing -->
+                    @Html.Partial("Partial1");
+                </div>
+            </nav>
+
+        </div>
+        <div class="col-lg-9 col-md-8 col-sm-12 justify-content-center">
+            <div id="content" class="container text-center col-12 overflow-auto">
+                <!-- content .... import content here(homepage.html,feedback.html,adminlogin.html and any component)-->
+                <!-- end content -->
+                <div class="p-4 border my-5 shadow">
+                    <h3 class="text-danger my-3 ">Add attendance</h3>
+                    <label>Select level:</label>
+                    <select id="txtlevel" class="form-control my-2 col-lg-4 offset-lg-4">
+                        @*<option value="0" selected>Select standard</option>
+                            <option value="1">1st std</option>
+                            <option value="2">2nd std</option>*@
+                    </select>
+                    <label>Select Class:</label>
+                    <select id="txtclass" class="form-control my-2 col-lg-4 offset-lg-4">
+                        @*<option value="0" selected>Select Division</option>
+                            <option value="1">A6Y54</option>
+                            <option value="2">B5G46</option>*@
+                    </select>
+                    <button type="button" id="Select" class="btn btn-danger my-3 w-25">Select</button>
+                    <div id="alert" class="alert alert-primary">Attendance added successfully</div>
+                    <div class="row my-3">
+                        <table class="table overflow-hidden border col-8">
+                            <thead class="text-white bg-danger">
+                                <tr >
+                                    <th scope="col border">#</th>
+                                    <th scope="col border">Student name</th>
+                                    <th scope="col border">Attendance</th>
+
+                                </tr>
+                            </thead>
+                            <tbody class="tbody" >
+                                
+                                @*<tr class="table table-dark">
+
+                                    <td>
+                                        <select class="form-control" id="atte">
+                                            <option value="0" selected>Present</option>
+                                                <option value="1">Absent</option>
+                                                <option value="2">Leave</option>
+                                        </select>
+                                    </td>
+                                </tr>*@
+                            </tbody>
+
+                        </table>
+                        <div class="col-4 border p-3">
+                            @*<h5 >Select Attendance</h5>*@
+
+                            <h5>Select date</h5>
+                            <input type="date" class="form-control" name="" id="data">
+                            <button class="btn btn-danger w-100 my-3" id="addattendance">Add attendance</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#alert').hide();
+        getlevel();
+        getclass();
+        //loadData attendance
+        $('#Select').click(function () {
+            var id = $('#txtclass').val();
+            var level_id = $('#txtlevel').val();
+            if (id == -1 || level_id == -1) { alert("please enter the select level and select class *? *?"); }
+            else {
+                $.ajax({
+                    url: "/Students/attendance?id=" + id + "&level_id=" + level_id,
+                    type: "GET",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        var html = '';
+                        var html2 = '';
+                        var i = 1;
+                        $.each(result, function (key, item) {
+                            html += '<tr id="Data">';
+                            html += '<td>' + i++ + '</td>';
+                            html += '<td id="id" style="display:none">' + item.studentid + '</td>';
+                            html += '<td >' + item.student_name + '</td>';
+                            html += '<td class="py-3 lead border" style="vertical-align: middle !important;" scope="row">' +
+                            '<select class="form-control" id="ddlAttendance">' +
+                            '<option value="0" selected>Present</option>' +
+                            '<option value="1">Absent</option>' +
+                            ' <option value="2">Leave</option>' +
+                            '</select >' +
+                            '</td >'
+                            html += '</tr>'
+
+                        });
+                        $('.tbody').html(html);
+
+                    },
+                });
+
+            }
+        })
+        $('#addattendance').click(function () {
+            savea_attendance();
+        });
+    })
+    //Dorpdwon list level
+    function getlevel() {
+        $.ajax({
+            url: "/Students/getlevel",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '<option value=-1>select of levels </option>';
+                $.each(result, function (key, item) {
+                    html += '<option value=' + item.level_id + '>';
+                    html += item.leval_name;
+                    html += '</option>';
+                });
+                $('#txtlevel').html(html);
+            },
+
+        });
+    }
+    //Dorpdwon list getclass
+    function getclass() {
+        $.ajax({
+            url: "/Students/getclass",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '<option value=-1>select of class </option>';
+                $.each(result, function (key, item) {
+                    html += '<option value=' + item.id + '>';
+                    html += item.class_name;
+                    html += '</option>';
+                });
+                $('#txtclass').html(html);
+            },
+
+        });
+    }
+    //save attendance
+    function savea_attendance() {
+        var data = $('#data').val();
+        $("tbody tr").each(function () {
+            var id = $(this).find('#id').html()
+            var attendance = $(this).find('#ddlAttendance').val()
+        if (attendance == 0 || attendance == undefined) {
+            alert("attendance is Requiered");
+        }
+        else if (data == "" || data == undefined) {
+            alert("data is Requiered");
+        }
+        else {
+            $.ajax({
+
+                url: "/Students/Addattendance?Attendance1=" + attendance + "&data_Attendance=" + data + "&studentid=" + id,
+                type: "post",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                   
+
+                },
+
+            });
+
+        }
+        }); $('#alert').slideDown(2000).hide(4000);
+    }
+
+</script>

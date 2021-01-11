@@ -1,0 +1,181 @@
+﻿
+@{
+    ViewBag.Title = "attendanceReportstudent";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="show" class="h-100 col-lg-3 col-md-4 text-center p-0 overflow-hidden d-md-block text-white border-right col-sm-12">
+            <nav class="nav navbar-expand-md navbar-light bg-light">
+                <button class="navbar-toggler w-100" type="button" data-toggle="collapse" data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span> Panel
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown2">
+                    <!-- import your sidebar here (sidebar.forms.html,admin.sidebar.html,stuff.sidebar.html) -->
+                    <!-- end of side bar importing -->
+                    @Html.Partial("Partial1");
+                </div>
+            </nav>
+
+        </div>
+        <div class="col-lg-9 col-md-8 col-sm-12 justify-content-center">
+
+            <div class="p-4 border my-5 shadow">
+               <center><h3 class="text-danger my-3 ">Attendance reports</h3></center> 
+                <div class="row my-3">
+                    <div class="col-lg-6 my-3 offset-lg-3 border p-3 text-center">
+                        <h5>Select level:</h5>
+                        <select id="level" class="form-control my-2">
+                            <option value="0" selected>Select standard</option>
+                            <option value="1">1st std</option>
+                            <option value="2">2nd std</option>
+                        </select>
+                        <h5>Select class:</h5>
+                        <select id="class" class="form-control my-2">
+                            <option value="0" selected>Select Division</option>
+                            <option value="1">A6Y54</option>
+                            <option value="2">B5G46</option>
+                        </select>
+                        <h5>Select date</h5>
+                        <input type="date" class="form-control" name="" id="date">
+                        <button type="button" id="selec" class="btn btn-danger my-3 w-50">Select</button>
+                        <h3  class="text-primary my-3 ">Results: <span id="Results"></span></h3>
+                    </div>
+                    <table id="tbody" class="table overflow-hidden border">
+                        <thead class="text-white bg-danger">
+                            <tr>
+                                <th scope="col border">#</th>
+                                <th scope="col border">Student name</th>
+                                <th scope="col border">Attendance</th>
+                                <th scope="col border">Attendance by</th>
+                                <th scope="col border">Attendance date</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- row for loop -->
+                            <tr>
+                                <td class="py-3 lead border" style="vertical-align: middle !important;"><span class="text-capitalize">A13D</span> </td>
+                                <td class="py-3 lead border" style="vertical-align: middle !important;"><span class="text-capitalize">Magdy elsayyad</span> </td>
+                                <td class="py-3 lead border" style="vertical-align: middle !important;" scope="row">present</td>
+                                <td class="py-3 lead border" style="vertical-align: middle !important;" scope="row">mriam</td>
+                                <td class="py-3 lead border" style="vertical-align: middle !important;" scope="row">19/5/2020</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        getlevels();
+        getclasss();
+        $('#selec').click(function () {
+            getresult();
+        })
+
+    })
+    function getlevels() {
+        $.ajax({
+            url: "/Students/getlevel",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '<option value=-1>select of levels </option>';
+                $.each(result, function (key, item) {
+                    html += '<option value=' + item.level_id + '>';
+                    html += item.leval_name;
+                    html += '</option>';
+                });
+                $('#level').html(html);
+            },
+
+        });
+    }
+    function getclasss() {
+        $.ajax({
+            url: "/Students/getclass",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '<option value=-1>select of class </option>';
+                $.each(result, function (key, item) {
+                    html += '<option value=' + item.id + '>';
+                    html += item.class_name;
+                    html += '</option>';
+                });
+                $('#class').html(html);
+            },
+
+        });
+    }
+    function getresult() {
+        var idclass = $('#class').val();
+        var levelid = $('#level').val();
+        var data_Attendance = $('#date').val();
+        
+        if (idclass == -1 || levelid == -1) { alert("please enter the select level and select class *? *?"); }
+        else {
+            $.ajax({
+                url: "/Students/getresult?id=" + idclass + "&level_id=" + levelid + "&data_Attendance=" + data_Attendance,
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    
+                    $('#Results').html(result.result);
+                    getalldata();
+                },
+
+            });
+
+        }
+    }
+    function getalldata() {
+        var idclass = $('#class').val();
+        var levelid = $('#level').val();
+        var data_Attendance = $('#date').val();
+        //var data = $('#date').val();
+       
+        if (idclass == -1 || levelid == -1) { alert("please enter the select level and select class *? *?"); }
+        else {
+            $.ajax({
+                url: "/Students/attendanceReport?id=" + idclass + "&level_id=" + levelid + "&data_Attendance=" + data_Attendance,
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var html = '';
+                    var html2 = '';
+                    var i = 1;
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + i++ + '</td>';
+                        html += '<td >' + item.student_name + '</td>';
+                        html += '<td >' + item.attendance1 + '</td>';
+                        html += '<td >' + item.teacher_name + '</td>';
+                        html += '<td >' + item.student_data + '</td>';
+
+                        html += '</tr>'
+
+                    });
+                    $('tbody').html(html);
+
+                },
+            });
+
+        }
+    }
+</script>
+
+
+

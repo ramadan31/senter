@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewBag.Title = "adminlogin";
+}
+
+
+
+
+<div  id="admin"class="container-fluid">
+    <div class="row">
+        <div id="show" class="h-100 col-lg-3 col-md-4 text-center p-0 overflow-hidden d-md-block text-white border-right col-sm-12">
+           @Html.Partial("_Partial1");
+
+        </div>
+        <div class="col-lg-9 col-md-8 col-sm-12 justify-content-center">
+            <div id="content" class="container text-center col-12 overflow-auto">
+
+
+                <form action="" class="my-5 border px-4 py-3 col-md-10 col-lg-8 offset-lg-2 shadow-lg text-center">
+                    <h2 class="my-3"><span class="text-danger" style="font-size: 40px;">A</span>dmin <span class="text-danger">l</span>ogin</h2>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="name" placeholder="Enter name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="Password" placeholder="Password" required>
+                    </div>
+                    <div id="alert" class="alert alert-danger text-center" role="alert">
+                        the Name  is Required
+                    </div>
+                    <div id="alert1" class="alert alert-danger text-center" role="alert">
+                        the Password is Required
+                    </div>
+                    <div  class="form-group justify-content-center">
+                        <button type="button" id="login" class="btn btn-primary w-25 ">Login</button>
+                    </div>
+
+                </form>
+
+                <!-- content .... import content here(homepage.html,feedback.html,adminlogin.html and any component)-->
+                <!-- end content -->
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('#alert').hide();
+        $('#alert1').hide();
+        $('#login').click(function () {
+            lodin();
+        })
+    });
+    function lodin() {
+        var name = $('#name').val();
+        var password = $('#Password').val();
+        if (name == ""|| name == undefined) {
+            $('#alert').show().hide(5000);
+        } else if (password == "" || password == undefined) {
+            $('#alert1').show().hide(5000);
+        }
+        else {
+            $.ajax({
+
+                url: "/Admin/adminlogin1?name=" + name + "&password=" + password ,
+                type: "Get",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result == "success") {
+                        alert('Login is successfully');
+                        window.location = "/Admin/level";
+                    } else {
+                        alert('برجاء ادخال الاسم صحيح او كلمت السر؟؟');
+                    }
+
+                },
+
+            });
+        }
+           
+    }
+</script>

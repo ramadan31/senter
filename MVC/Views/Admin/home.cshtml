@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "home";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="show" class="h-100 col-lg-3 col-md-4 text-center p-0 overflow-hidden d-md-block text-white border-right col-sm-12">
+            @Html.Partial("_Partial1");
+
+        </div>
+        <div class="col-lg-9 col-md-8 col-sm-12 justify-content-center">
+            <div id="content" class="container text-center col-12 overflow-auto">
+
+                <div style="height: 500px;" class=" align-content-center row justify-content-center my-4 p-4 border shadow  border-primary">
+                    <h3 class="mt-5 ">
+                        Welcome to
+                    </h3>
+                    <h1 style="font-size: 60px;" class="p-0 col-12 text-primary ">
+                        Platform name
+                    </h1>
+                </div>
+
+                <!-- content .... import content here(homepage.html,feedback.html,adminlogin.html and any component)-->
+                <!-- end content -->
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

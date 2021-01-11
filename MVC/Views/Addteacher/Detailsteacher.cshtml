@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "Detailsteacher";
+}
+<input type="hidden" id="idd" value="@ViewBag.id" />
+<div class="container-fluid">
+    <div class="row">
+        <div id="show" class="h-100 col-lg-3 col-md-4 text-center p-0 overflow-hidden d-md-block text-white border-right col-sm-12">
+            <nav class="nav navbar-expand-md navbar-light bg-light">
+                <button class="navbar-toggler w-100" type="button" data-toggle="collapse" data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span> Panel
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown2">
+                    <!-- import your sidebar here (sidebar.forms.html,admin.sidebar.html,stuff.sidebar.html) -->
+                    <!-- end of side bar importing -->
+             
+                    <div class="list-group text-center flex-column w-100 shadow-lg border-right border-danger">
+                        <h3 class="py-3 alert-danger m-0">Teacher panel</h3>
+                        <img src="smartphone-png-17251.png" class="my-3 shadow col-6 offset-3 border-danger border" alt="">
+                        <h5 class="text-center lead text-danger font-weight-bold text-capitalize">mohammed asaad</h5>
+                        <a href="http://localhost:20478/Addteacher/Detailsteacher?id=@ViewBag.id" class="list-group-item list-group-item-action" id="list-home-list">My profile </a>
+                        <a href="http://localhost:20478/Students/addStudentcomponent" class="list-group-item list-group-item-action">Add student</a>
+                        <a href="http://localhost:20478/Students/studentsReports_component" class="list-group-item list-group-item-action" id="list-home-list">Student reports</a>
+                        <a href="http://localhost:20478/Addteacher/changepassword?id=@ViewBag.id" class="list-group-item list-group-item-action" id="list-home-list">changepsssword</a>
+                         <a href="http://localhost:20478/Students/AttendanceStudent" class="list-group-item list-group-item-action" id="list-home-list">Attendance</a>
+                        <a href="http://localhost:20478/Students/attendanceReportstudent" class="list-group-item list-group-item-action" id="list-home-list">Attendance report</a>
+                        <a href="http://localhost:20478/Students/advanceAttReports_component" class="list-group-item list-group-item-action" id="list-home-list">Advance report</a>
+                        <a href="http://localhost:20478" class="list-group-item list-group-item-action">Log out</a>
+                    </div>
+
+                      
+                       
+                    </div>
+            </nav>
+
+        </div>
+        <div class="col-lg-9 col-md-8 col-sm-12 justify-content-center">
+            <div id="content" class="container text-center col-12 overflow-auto">
+                <!-- content .... import content here(homepage.html,feedback.html,adminlogin.html and any component)-->
+                <!-- end content -->
+                <div class="row my-5 border border-danger p-4 shadow-lg col-lg-8 offset-lg-2">
+                    <h2 class=" col-12 my-4 text-danger">My profile</h2>
+                    <div class="col-md-6 my-2"><input class="form-control" id="Email" type="email" value="" name="" placeholder="Email"></div>
+                    <div class="col-md-6 my-2"><input class="form-control" id="Mobile" type="text" value="" name="" placeholder="Mobile"></div>
+                    <div class="col-md-6 my-2"><input class="form-control" id="Address" type="text" value="" name="" placeholder="Address"></div>
+                    <div class="col-md-6 my-2"><input class="form-control" id="City" type="text" value="" name="" placeholder="City"></div>
+
+                    <div class="col-md-6 my-2 text-left">Photo:<input class="form-control-file" id="Photo" title="Pic" type="file" value="" name="" placeholder="Photo"></div>
+                    <div class="col-12 my-2"><button id="Update" type="submit" class="btn btn-primary w-25">Update</button></div>
+                </div>
+            </div>
+            
+        </div>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+       
+        UpdateProduct();
+        $('#Update').click(function () {
+            var id = $('#idd').val();
+            var Email = $('#Email').val();
+            var Mobile = $('#Mobile').val();
+            var Address = $('#Address').val();
+            var City = $('#City').val();
+            var Photo = $('#Photo').val();
+            $.ajax({
+
+                url: "/Addteacher/updata?Email=" + Email + "&mobile=" + Mobile + "&addres=" + Address + "&id=" + id + "&city=" + City + "&photo=" + Photo,
+                type: "post",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    canal();
+                    alert(' Update save ');
+                    UpdateProduct();
+            
+                  
+                },
+
+            });
+
+        })
+    })
+    function UpdateProduct() {
+        var id = $('#idd').val();
+        $.ajax({
+            url: "/Addteacher/Edit?id=" + id,
+            type: "post",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+
+            success: function (result) {
+                $('#Email').val(result.Email);
+                $('#Mobile').val(result.mobile);
+                $('#Address').val(result.addres);
+                $('#City').val(result.city);
+                $('#Photo').val(result.photo);
+
+            }
+        })
+    }
+    function canal() {
+        $('#Email').val('');
+        $('#Mobile').val('');
+        $('#Address').val('');
+        $('#City').val('');
+        $('#Photo').val('');
+    }
+</script>

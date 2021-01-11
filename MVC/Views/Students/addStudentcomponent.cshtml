@@ -1,0 +1,225 @@
+﻿
+@{
+    ViewBag.Title = "addStudentcomponent";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="show" class="h-100 col-lg-3 col-md-4 text-center p-0 overflow-hidden d-md-block text-white border-right col-sm-12">
+            <nav class="nav navbar-expand-md navbar-light bg-light">
+                <button class="navbar-toggler w-100" type="button" data-toggle="collapse" data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span> Panel
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown2">
+                    <!-- import your sidebar here (sidebar.forms.html,admin.sidebar.html,stuff.sidebar.html) -->
+                    <!-- end of side bar importing -->
+
+                    @Html.Partial("Partial1");
+                </div>
+            </nav>
+
+        </div>
+        <div class="col-lg-9 col-md-8 col-sm-12 justify-content-center">
+            <div id="content" class="container text-center col-12 overflow-auto">
+                <!-- content .... import content here(homepage.html,feedback.html,adminlogin.html and any component)-->
+                <!-- end content -->
+                <div class="col-lg-8 offset-lg-2 border-danger border p-5 my-5 shadow">
+                    <h2 class="my-4 text-danger">Add New Student</h2>
+                    <div class="row">
+                        <label>Select level:</label>
+                        <select id="txtlevel" class="form-control my-2" required></select>
+                        <label>Select Class:</label>
+                        <select id="txtclass" class="form-control my-2" required></select>
+                        <div class="col-12 my-2"><button type="submit" id="Select"class="btn btn-danger w-25">Select</button></div>
+
+                        <!-- information -->
+                        <div class="w-100 my-3" id="totalstudent">
+                            <h4 class="text-primary text-left">
+                                Total seat:  <label id="seat" class="text-dark" ></label>
+                                
+                            </h4>
+                            <h4 class="text-primary text-left">
+                                Total admitted: <span class="text-dark" id="admited"></span>
+                            </h4>
+                            <h4 class="text-primary text-left">
+                                Remaining students: <span id="Remaining" class="text-dark"></span>
+                            </h4>
+                        </div>
+                        <form class="my-3 row w-100">
+                            <!-- when you add student to server show this alert(replace d-none with d-block) -->
+                            <!-- end of alert -->
+                            <input type="text" class="form-control my-1" id="name" placeholder="Student name" required>
+                            <input type="text" class="form-control my-1" id="Mobile" placeholder="Mobile" required>
+                            <input type="email" class="form-control my-1" id="Email" placeholder="Email" required>
+                            <input type="date" id="date" class="form-control">
+                            <input type="text" class="form-control my-1" id="Address" placeholder="Address" required>
+                            <input type="text" class="form-control my-1" id="City" placeholder="City" required>
+                            <input type="text" class="form-control my-1" id="Username" placeholder="Username" required>
+                            <input type="text" class="form-control my-1" id="Password" placeholder="Password" required>
+                            <input type="text" class="form-control my-1" id="ConfirmPassword" placeholder="ConfirmPassword" required>
+                            <div class="w-100 my-2">
+                                <input type="button" id="Addstudent" value="Add student" class="btn btn-danger">
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        getlevel();
+        getclass();
+        $('#alert').hide();
+        $('#totalstudent').hide();
+        $('#Select').click(function () {
+           
+            getadmitte_seat();
+            $('#totalstudent').slideDown();
+        })
+        $('#Addstudent').click(function () {
+
+            save();
+        })
+          
+        })
+    function getlevel() {
+        $.ajax({
+            url: "/Students/getlevel",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '<option value=-1>select of levels </option>';
+                $.each(result, function (key, item) {
+                    html += '<option value=' + item.level_id + '>';
+                    html += item.leval_name;
+                    html += '</option>';
+                });
+                $('#txtlevel').html(html);
+            },
+
+        });
+    }
+    function getclass() {
+        $.ajax({
+            url: "/Students/getclass",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '<option value=-1>select of class </option>';
+                $.each(result, function (key, item) {
+                    html += '<option value=' + item.id + '>';
+                    html += item.class_name;
+                    html += '</option>';
+                });
+                $('#txtclass').html(html);
+            },
+
+        });
+    }
+    function getadmitte_seat() {
+        var id = $('#txtclass').val();
+        var level_id = $('#txtlevel').val();
+        if (id == -1 || level_id == -1) { alert("please enter the select level and select class *? *?"); }
+        else {
+            $.ajax({
+                url: "/Students/getadmited?id=" + id + "&level_id=" + level_id,
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    $('#seat').html(result.seat);
+                    $('#admited').html(result.admitted);
+                    $('#Remaining').html(result.Remaining);
+                },
+
+            });
+
+        }
+    }
+    function save() {
+        var studentname = $('#name').val();
+        var studentmodile = $('#Mobile').val();
+        var password = $('#Password').val();
+        var username = $('#Username').val();
+        var comfirempassword = $('#ConfirmPassword').val();
+        var city = $('#City').val();
+        var addrirs = $('#Address').val();
+        var email = $('#Email').val();
+        var id = $('#txtclass').val();
+        var level_id = $('#txtlevel').val();
+        var data = $('#date').val();
+        if (studentname == ""|| name == undefined) {
+            alert('the student_name is rquired ');
+        }
+        else if (studentmodile == "" || studentmodile == undefined) {
+            alert('the modile is rquired ');
+        }
+        else if (addrirs == "" || addrirs == undefined) {
+            alert('the addrirs is rquired ');
+        }
+        else if (email == "" || email == undefined) {
+            alert('the email is rquired ');
+        }
+        else if (city == "" || city == undefined) {
+            alert('the city is rquired ');
+        } 
+        
+        else if (username == "" || username == undefined) {
+            alert('the username is rquired ');
+        }
+        else if (password == "" || password == undefined || comfirempassword == "" || comfirempassword == undefined) {
+            alert('the password is rquired ');
+        }
+        else if (data == "" || data == undefined) {
+            alert('the data is rquired ');
+        }
+        else {
+            $.ajax({
+                url: "/Students/Addstudent?student_name=" + studentname + "&mobile=" + studentmodile + "&address=" + addrirs + "&Email=" + email + "&city=" + city
+                   + "&username=" + username + "&password=" + password + "&comfirm_password=" + comfirempassword + "&student_data=" + data + "&id=" + id + "&level_id=" + level_id,
+                type: "Post",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result == "success") {
+                        alert('Student added successfully')
+                    }
+                    else {
+                        alert('الايمل موجود من قبل او كلمه السر غير مطابقه')
+                    }
+                },
+
+            });
+        }
+      
+    }
+    //function getseat() {
+    //    var getclass = $('#txtclass').val();
+    //    var getlevel = $('#txtlevel').val();
+    //    if (getclass == -1 || getlevel == -1) { alert("please enter the select level and select class *? *?"); }
+    //    else {
+    //        var id = $('#txtclass').val();
+    //        $.ajax({
+    //            url: "/Students/getseat?id=" + id,
+    //            type: "GET",
+    //            contentType: "application/json;charset=utf-8",
+    //            dataType: "json",
+    //            success: function (result) {
+    //                $('#seat').html(result.seat);
+
+    //            },
+
+    //        });
+    //    }
+
+
+    //}
+</script>

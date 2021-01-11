@@ -1,0 +1,53 @@
+<div class="col-lg-8 offset-lg-2 border-danger border p-5 my-5 shadow">
+    <h2 class="my-4 text-danger">Add New Student</h2>
+    <div class="row">
+        <label>Select Standard:</label>
+        <select class="form-control my-2">
+            <option value="0" selected>Select standard</option>
+            <option value="1">1st std</option>
+            <option value="2">2nd std</option>
+        </select>
+        <label>Select Division:</label>
+        <select class="form-control my-2">
+            <option value="0" selected>Select Division</option>
+            <option value="1">A6Y54</option>
+            <option value="2">B5G46</option>
+        </select>
+        <div class="col-12 my-2"><button type="submit" class="btn btn-danger w-25">Select</button></div>
+
+        <!-- information -->
+        <div class="w-100 my-3">
+            <h4 class="text-primary text-left">
+                Total seat: <span class="text-dark">56</span>
+            </h4>
+            <h4 class="text-primary text-left">
+                Total admitted: <span class="text-dark">56</span>
+            </h4>
+            <h4 class="text-primary text-left">
+                Remaining students: <span class="text-dark">56</span>
+            </h4>
+        </div>
+        <form class="my-3 row w-100">
+            <!-- when you add student to server show this alert(replace d-none with d-block) -->
+            <div class="alert w-100 alert-primary d-none">Student added successfully</div>
+            <!-- end of alert -->
+            <input type="number" class="form-control my-1" placeholder="RollNo" value="">
+            <input type="text" class="form-control my-1" placeholder="Student name" value="">
+            <input type="number" class="form-control my-1" placeholder="Mobile" value="">
+            <input type="email" class="form-control my-1" placeholder="Email" value="">
+            <input type="date" class="form-control">
+            <input type="email" class="form-control my-1" placeholder="Address" value="">
+            <input type="email" class="form-control my-1" placeholder="City" value="">
+            <input type="email" class="form-control my-1" placeholder="Pincode" value="">
+            <label for="photo">Photo:</label>
+            <input type="file" class="form-control-file" name="" id="photo">
+            <input type="email" class="form-control my-1" placeholder="Username" value="">
+            <input type="email" class="form-control my-1" placeholder="Password" value="">
+            <input type="email" class="form-control my-1" placeholder="Confirm Password" value="">
+            <div class="w-100 my-2">
+                <button class="btn btn-danger">Add student</button>
+            </div>
+
+        </form>
+    </div>
+</div>

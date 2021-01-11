@@ -1,0 +1,128 @@
+﻿
+@{
+    ViewBag.Title = "getclasss";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="show" class="h-100 col-lg-3 col-md-4 text-center p-0 overflow-hidden d-md-block text-white border-right col-sm-12">
+            <nav class="nav navbar-expand-md navbar-light bg-light">
+                <button class="navbar-toggler w-100" type="button" data-toggle="collapse" data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span> Panel
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown2">
+
+                    <div class="list-group text-center flex-column w-100 shadow border border-primary">
+                        <h3 class="py-3 alert-primary m-0">Admin panel</h3>
+                        <a href="http://localhost:20478/Admin/level" class="list-group-item list-group-item-action" id="list-home-list">Add Level </a>
+                        <a href="http://localhost:20478/class/index" class="list-group-item list-group-item-action" id="list-home-list">Add Class</a>
+                        <a href="http://localhost:20478/Addteacher/teachers?" class="list-group-item list-group-item-action" id="list-home-list">Add teacher</a>
+
+                        <a href="http://localhost:20478/Addteacher/getclasss" class="list-group-item list-group-item-action" id="list-home-list">get all teachers</a>
+                        <a href="http://localhost:20478" class="list-group-item list-group-item-action" id="list-home-list">Log out</a>
+                    </div>
+                    <!-- import your sidebar here (sidebar.forms.html,admin.sidebar.html,stuff.sidebar.html) -->
+                    <!-- end of side bar importing -->
+                </div>
+            </nav>
+
+        </div>
+        <div class="col-lg-9 col-md-8 col-sm-12 justify-content-center">
+            <div id="content" class="container text-center col-12 overflow-auto">
+
+
+                <!-- table to show Stuff -->
+                <table class="table my-4 border overflow-hidden shadow-lg">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Photo</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">City</th>
+                            <th scope="col">Mobile</th>
+                            <th scope="col">Email </th>
+                            <th scope="col">proces </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody" class="table table-striped table-dark">
+                        <!-- row for loop -->
+                        <tr>
+                            <td class="py-4 border lead">magdy</td>
+                            <td class="py-4 border lead">magdy@g.com</td>
+                            <td class="py-4 border lead">01028553856</td>
+                            <td class="py-4 border lead">wadi an natrun</td>
+                            <td>
+                                <button class="btn btn-danger  w-49 my-1 m-0" type="submit">Delete</button>
+                            </td>
+                        </tr>
+
+                        <!-- end of row -->
+
+                    </tbody>
+                </table>
+                <!-- content .... import content here(homepage.html,feedback.html,adminlogin.html and any component)-->
+                <!-- end content -->
+            </div>
+
+        </div>
+        <input type="hidden" id="hdnID" value="">
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        loadData();
+    } )
+    function loadData() {
+     $.ajax({
+         url: "/Addteacher/getclass",
+         type: "GET",
+         contentType: "application/json;charset=utf-8",
+         dataType: "json",
+         success: function (result) {
+             var html = '';
+             $.each(result, function (key, item) {
+                 html += '<tr>';
+                 html += '<td>' + '<i class="fa fa-user"></i>' + '</td>';
+                 html += '<td>' + item.teacher_name + '</td>';
+                 html += '<td>' + item.city + '</td>';
+                 html += '<td>' + item.mobile + '</td>';
+                 html += '<td>' + item.Email + '</td>';
+                 html += '<td>' +
+                     '&nbsp;&nbsp;<a href="javascript:void(0);" onclick=DeleteProduct(' + item.id + '); return false;><i class="fa fa-trash" style="font-size: x-large;color: red;"></i></a>' +
+                 '</td> ';
+                 html += '</tr>'
+
+             });
+             $('#tbody').html(html);
+         },
+
+     });
+    }
+    function DeleteProduct(id) {
+        $('#hdnID').val(id);
+        var s = confirm("ok or NO Delete");
+        if (s) {
+            $.ajax({
+                url: "/Addteacher/deletteacher?id="+id,
+                type: "post",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+
+                success: function (result) {
+                    if (result == "success") {
+                        alert("Delete is successfully")
+                        loadData();
+                    } else {
+                        alert(" It cannot be deleted because it includes other information")
+                    }
+                   
+
+                }
+            })
+        }
+        else { loadData(); }
+
+
+    };
+</script>
+

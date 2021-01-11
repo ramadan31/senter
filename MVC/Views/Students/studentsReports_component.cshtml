@@ -1,0 +1,180 @@
+﻿
+@{
+    ViewBag.Title = "studentsReports_component";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="show" class="h-100 col-lg-3 col-md-4 text-center p-0 overflow-hidden d-md-block text-white border-right col-sm-12">
+            <nav class="nav navbar-expand-md navbar-light bg-light">
+                <button class="navbar-toggler w-100" type="button" data-toggle="collapse" data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span> Panel
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown2">
+                    <!-- import your sidebar here (sidebar.forms.html,admin.sidebar.html,stuff.sidebar.html) -->
+                    <!-- end of side bar importing -->
+                    @Html.Partial("Partial1");
+                </div>
+            </nav>
+
+        </div>
+        <div class="col-lg-9 col-md-8 col-sm-12 justify-content-center">
+            <div id="content" class="container text-center col-12 overflow-auto">
+                <!-- content .... import content here(homepage.html,feedback.html,adminlogin.html and any component)-->
+                <!-- end content -->
+
+                <div class="p-4 border my-5 shadow">
+                    <h3 class="text-danger my-3">Student reports</h3>
+                    <label>Select level:</label>
+                    <select  id="level"class="form-control my-2 col-lg-4 offset-lg-4">
+                        @*<option value="0" selected>Select standard</option>
+                        <option value="1">1st std</option>
+                        <option value="2">2nd std</option>*@
+                    </select>
+                    <label>Select class:</label>
+                    <select  id="class"class="form-control my-2 col-lg-4 offset-lg-4">
+                        @*<option value="0" selected>Select Division</option>
+                        <option value="1">A6Y54</option>
+                        <option value="2">B5G46</option>*@
+                    </select>
+                    <div class="col-12 my-2"><button type="submit" id="submit1" class="btn btn-danger w-25">Select</button></div>
+                    <h5 class="text-danger my-3" >Total students: <span id="admited" class="text-dark"></span></h5>
+                    <!-- table to show student reports -->
+                    <table class="table my-4 overflow-hidden border">
+                        <thead class="thead-dark">
+                            <tr>
+                               
+                                <th scope="col border">#</th>
+                                <th scope="col border">name</th>
+                                <th scope="col border">Mobile</th>
+                                <th scope="col border">Email</th>
+                                <th scope="col border">BirthDate</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody" >
+                            <!-- row for loop -->
+                            <tr>
+                                @*<td class="py-3 lead border" style="vertical-align: middle !important;" scope="row"><img src="smartphone-png-17251.png" alt="student img" width="80px" height="80px" srcset=""></td>
+                             <td class="py-3 lead border" style="vertical-align: middle !important;"><span class="text-capitalize">A13D</span> </td>*@
+                                @*<td class="py-3 lead border" style="vertical-align: middle !important;"><span class="text-capitalize">Magdy elsayyad</span> </td>
+                                <td class="py-3 lead border" style="vertical-align: middle !important;"><span class="text-capitalize">01092376044</span> </td>
+                                <td class="py-3 lead border" style="vertical-align: middle !important;"><span class="text-capitalize">g@g.com</span> </td>
+                                <td class="py-3 lead border" style="vertical-align: middle !important;"><span class="text-capitalize">10/4/1999</span> </td>*@
+
+                            </tr>
+
+
+                            </tbody>
+</table>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+    $(document).ready(function () {
+        getlevel();
+        getclass();
+        $('#submit1').click(function () {
+            getcount_of_student();
+        })
+        })
+    // get total level
+    function getlevel() {
+        $.ajax({
+            url: "/Students/getlevel",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '<option value=-1>select of levels </option>';
+                $.each(result, function (key, item) {
+                    html += '<option value=' + item.level_id + '>';
+                    html += item.leval_name;
+                    html += '</option>';
+                });
+                $('#level').html(html);
+            },
+
+        });
+    }
+    // get total class
+    function getclass() {
+        $.ajax({
+            url: "/Students/getclass",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '<option value=-1>select of class </option>';
+                $.each(result, function (key, item) {
+                    html += '<option value=' + item.id + '>';
+                    html += item.class_name;
+                    html += '</option>';
+                });
+                $('#class').html(html);
+            },
+
+        });
+    }
+    // get total student
+    function getcount_of_student() {
+        var id = $('#class').val();
+        var level_id = $('#level').val();
+        if (id == -1 || level_id == -1) { alert("please enter the select level and select class *? *?"); }
+        else {
+            $.ajax({
+                url: "/Students/getcount_of_student?id=" + id + "&level_id=" + level_id,
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    $('#admited').html(result.count);
+                    getallstudent();
+                },
+
+            });
+
+        }
+    }
+    // getall total student
+    function getallstudent() {
+        var id = $('#class').val();
+        var level_id = $('#level').val();
+        if (id == -1 || level_id == -1) { alert("please enter the select level and select class *? *?"); }
+        else {
+            $.ajax({
+                url: "/Students/Getallstudent?id=" + id + "&level_id=" + level_id,
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var html = '';
+                    var i = 1;
+                    $.each(result, function (key, item) {
+                        html += '<tr >';
+                        html += '<td>' + i++ + '</td>';
+                        html += '<td >' + item.student_name + '</td>';
+                        html += '<td >' + item.mobile + '</td>';
+                        html += '<td >' + item.Email + '</td>';
+                        html += '<td >' + item.student_data + '</td>';
+                        html += '</tr>'
+
+                    });
+                    $('.tbody').html(html);
+
+                },
+
+            })
+        }
+    }
+    
+</script>
+
+
+
